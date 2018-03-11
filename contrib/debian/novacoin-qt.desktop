@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=StationCoin
+Comment=StationCoin P2P Cryptocurrency
+Comment[ru]=StationCoin, P2P криптовалюта
+Comment[fr]=StationCoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=StationCoin, eşten eşe kriptografik sanal para birimi
+Exec=/usr/bin/StationCoin-qt
+Terminal=false
+Type=Application
+Icon=/usr/share/pixmaps/StationCoin80.xpm
+MimeType=x-scheme-handler/StationCoin;
+Categories=Office;

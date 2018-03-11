@@ -1,0 +1,68 @@
+#!/bin/sh
+
+# PROVIDE: StationCoin
+# REQUIRE: LOGIN
+# KEYWORD: shutdown
+
+#
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+# StationCoin_enable (bool): Set to NO by default. Set this variable to YES if you want to enable StationCoin service.
+# StationCoin_config (path): Set to /usr/local/etc/StationCoin.conf by default.
+# StationCoin_user:  The user account StationCoin daemon runs as. It uses 'root' user by default.
+# StationCoin_group: The group account StationCoin daemon runs as. It uses 'wheel' group by default.
+# StationCoin_datadir (str): Default to "/var/db/StationCoin". Base data directory.
+
+. /etc/rc.subr
+
+name=StationCoin
+rcvar=StationCoin_enable
+
+: ${StationCoin_enable:=NO}
+: ${StationCoin_config=/usr/local/etc/StationCoin.conf}
+: ${StationCoin_datadir=/var/db/StationCoin}
+: ${StationCoin_user="root"}
+: ${StationCoin_group="wheel"}
+
+required_files=${StationCoin_config}
+command=/usr/local/bin/StationCoind
+StationCoin_chdir=${StationCoin_datadir}
+pidfile="${StationCoin_datadir}/StationCoind.pid"
+stop_cmd=StationCoin_stop
+command_args="-conf=${StationCoin_config} -datadir=${StationCoin_datadir} -daemon -pid=${pidfile}"
+start_precmd="${name}_prestart"
+
+StationCoin_create_datadir()
+{
+	echo "Creating data directory"
+	eval mkdir -p ${StationCoin_datadir}
+	[ $? -eq 0 ] && chown -R ${StationCoin_user}:${StationCoin_group} ${StationCoin_datadir}
+}
+
+StationCoin_prestart()
+{
+	if [ ! -d "${StationCoin_datadir}/." ]; then
+		StationCoin_create_datadir || return 1
+	fi
+}
+
+StationCoin_requirepidfile()
+{
+	if [ ! "0`check_pidfile ${pidfile} ${command}`" -gt 1 ]; then
+		echo "${name} not running? (check $pidfile)."
+		exit 1
+	fi
+}
+
+StationCoin_stop()
+{
+    StationCoin_requirepidfile
+
+	echo "Stopping ${name}."
+	eval ${command} -conf=${StationCoin_config} -datadir=${StationCoin_datadir} stop
+	wait_for_pids ${rc_pid}
+}
+
+load_rc_config $name
+run_rc_command "$1"

@@ -1,0 +1,2 @@
+debian/bin/StationCoind usr/bin
+src/StationCoind usr/lib/StationCoin
