@@ -1,0 +1,9 @@
+Building StationCoin
+
+See doc/readme-qt.rst for instructions on building StationCoin Qt,
+the intended-for-end-users, nice-graphical-interface, reference
+implementation of StationCoin.
+
+See doc/build-*.txt for instructions on building StationCoind,
+the intended-for-services, no-graphical-interface, reference
+implementation of StationCoin.
